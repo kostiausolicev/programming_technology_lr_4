@@ -3,19 +3,39 @@ package ru.kosti.lr_4.util
 class Tree(
     private var root: Node? = null
 ) {
-    fun add(node: Node) {
+    fun check(): Boolean {
+        if (root == null) return true
+        var current = root!!
+        while (current.left!= null) {
+            if (current.left!!.key >= current.key) return false
+            current = current.left!!
+        }
+        current = root!!
+        while (current.right!= null) {
+            if (current.right!!.key <= current.key) return false
+            current = current.right!!
+        }
+        return true
+    }
+
+    fun add(key: Int) {
         if (root == null) {
-            root = node
+            root = Node(key = key)
             return
         }
         var current = root!!
         while (true) {
-            if (node.key == current.key)
+            if (key == current.key) {
+                if (!check())
+                    throw Exception("Дерево не правильное")
                 return
-            else if (node.key < current.key) {
+            }
+            else if (key < current.key) {
                 if (current.left == null) {
+                    val node = Node(key = key, parent = current)
                     current.left = node
-                    node.parent = current
+                    if (!check())
+                        throw Exception("Дерево не правильное")
                     return
                 }
                 current = current.left!!
@@ -23,8 +43,10 @@ class Tree(
             }
             else {
                 if (current.right == null) {
+                    val node = Node(key = key, parent = current)
                     current.right = node
-                    node.parent = current
+                    if (!check())
+                        throw Exception("Дерево не правильное")
                     return
                 }
                 current = current.right!!
@@ -51,7 +73,57 @@ class Tree(
         return current
     }
 
-    fun delete(node: Node) {
+    fun searchNext(rootSubTree: Node): Node {
+        var current: Node = rootSubTree
+        while (current.left != null) {
+            current = current.left!!
+        }
+        return current
+    }
 
+    fun delete(key: Int) {
+        val node = search(key) ?: return
+        // Удаление листа
+        if (node.left == null && node.right == null) {
+            if (node.key < node.parent!!.key) {
+                node.parent!!.left = null
+            }
+            else {
+                node.parent!!.right = null
+            }
+            if (!check())
+                throw Exception("Дерево не правильное")
+        }
+        // Удаление с правым потомком
+        else if (node.left == null) {
+            val rightNode = node.right!!
+            if (rightNode.key < node.parent!!.key) {
+                node.parent!!.left = rightNode
+            }
+            else if (rightNode.key > node.parent!!.key) {
+                node.parent!!.right = rightNode
+            }
+        }
+        // Удаление с левым потомком
+        else if (node.right == null) {
+            val leftNode = node.left!!
+            if (leftNode.key < node.parent!!.key) {
+                node.parent!!.left = leftNode
+            }
+            else if (leftNode.key > node.parent!!.key) {
+                node.parent!!.right = leftNode
+            }
+        }
+        // Удаление с левым потомком и правым потомком
+        else {
+            val next = searchNext(node)
+            if (next.parent == null) return
+            next.parent!!.left = null
+            next.parent = node.parent
+            next.left = node.left
+            next.right = node.right
+            if (!check())
+                throw Exception("Дерево не правильное")
+        }
     }
 }
