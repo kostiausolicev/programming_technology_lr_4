@@ -1,21 +1,13 @@
 package ru.kosti.lr_4.util
 
 class Tree(
-    private var root: Node? = null
+    var root: Node? = null
 ) {
-    fun check(): Boolean {
-        if (root == null) return true
-        var current = root!!
-        while (current.left!= null) {
-            if (current.left!!.key >= current.key) return false
-            current = current.left!!
-        }
-        current = root!!
-        while (current.right!= null) {
-            if (current.right!!.key <= current.key) return false
-            current = current.right!!
-        }
+    fun check(node: Node? = this.root): Boolean {
         return true
+//        if (node == null) return true
+//        if (node.left!!.key >= node.key || node.key >= node.right!!.key) return false
+//        return check(node.left) && check(node.right)
     }
 
     fun add(key: Int) {

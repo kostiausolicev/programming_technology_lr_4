@@ -6,4 +6,5 @@ module ru.kosti.lr_4 {
                             
     opens ru.kosti.lr_4 to javafx.fxml;
     exports ru.kosti.lr_4;
+    exports ru.kosti.lr_4.controller;
 }

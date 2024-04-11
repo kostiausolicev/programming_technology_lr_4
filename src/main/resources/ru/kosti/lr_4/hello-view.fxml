@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
-
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!"/>
-</VBox>
+<SplitPane dividerPositions="0.8090452261306532" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="501.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.kosti.lr_4.controller.MainController">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="401.0" prefWidth="617.0">
+        <Label fx:id="currentNodeKey" layoutX="255.0" layoutY="160.0" prefHeight="81.0" prefWidth="89.0" style="-fx-background-color: rgb(188, 244, 243); -fx-alignment: center;" />
+        <Label fx:id="leftNodeKey" layoutX="44.0" layoutY="253.0" prefHeight="81.0" prefWidth="99.0" style="-fx-alignment: center; -fx-background-color: rgb(188, 244, 243);" />
+        <Label fx:id="rightNodeKey" layoutX="471.0" layoutY="253.0" prefHeight="81.0" prefWidth="89.0" style="-fx-alignment: center; -fx-background-color: rgb(188, 244, 243);" />
+        <Label fx:id="parentNodeKey" layoutX="255.0" layoutY="42.0" prefHeight="81.0" prefWidth="89.0" style="-fx-alignment: center; -fx-background-color: rgb(188, 244, 243);" />
+        <Button fx:id="toParent" layoutX="258.0" layoutY="362.0" mnemonicParsing="false" onAction="#toParent" text="К родителю" />
+        <Button fx:id="toLeft" layoutX="133.0" layoutY="362.0" mnemonicParsing="false" onAction="#toLeft" text="Левый потомок" />
+        <Button fx:id="toRight" layoutX="361.0" layoutY="362.0" mnemonicParsing="false" onAction="#toRight" text="Правый потомок" />
+        <Label layoutX="276.0" layoutY="239.0" text="текущий" />
+        <Label layoutX="76.0" layoutY="233.0" text="левый" />
+        <Label layoutX="495.0" layoutY="233.0" text="правый" />
+        <Label layoutX="273.0" layoutY="25.0" text="родитель" />
+        <Line endX="100.0" layoutX="154.0" layoutY="201.0" startX="-11.0" startY="92.5" />
+        <Line endX="26.0" endY="92.5" layoutX="445.0" layoutY="201.0" startX="-100.0" />
+        <Line endX="-100.0" endY="37.0" layoutX="399.0" layoutY="124.0" startX="-100.0" />
+      <Button fx:id="reload" layoutX="534.0" layoutY="13.0" mnemonicParsing="false" text="Обновить" onAction="#reload" />
+    </AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="65.0" prefWidth="598.0">
+        <TextField fx:id="keyInputField" layoutX="125.0" layoutY="18.0" prefHeight="25.0" prefWidth="349.0" promptText="введите ключ" style="-fx-alignment: center;" />
+        <Button fx:id="searchButton" layoutX="125.0" layoutY="50.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="103.0" text="поиск" />
+        <Button fx:id="deleteButton" layoutX="248.0" layoutY="50.0" mnemonicParsing="false" onAction="#delete" prefHeight="25.0" prefWidth="103.0" text="удалить" />
+        <Button fx:id="addButton" layoutX="370.0" layoutY="50.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="103.0" text="добавить" />
+    </AnchorPane>
+</SplitPane>
