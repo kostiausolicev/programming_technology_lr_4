@@ -1,5 +1,6 @@
 package ru.kosti.lr_4.controller
 
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
@@ -21,15 +22,18 @@ class MainController {
     lateinit var currentNodeKey: Label
 
     fun reload() {
-        initLabels(tree.root ?: return ) //TODO добавить алерт
+        initLabels(tree.root ?: run {
+            throwAlert("Нет корня у дерева", Alert.AlertType.ERROR)
+            return
+        } )
     }
 
     fun search() {
         val key = keyInputField.text.toIntOrNull() ?: run {
-            return //TODO добавить алерт
+            return throwAlert("Вы ввели некорректное число", Alert.AlertType.ERROR)
         }
         val node = tree.search(key) ?: run {
-            return //TODO добавить алерт
+            return throwAlert("Узел не найден", Alert.AlertType.INFORMATION)
         }
         initLabels(node)
     }
@@ -46,10 +50,12 @@ class MainController {
         try {
             val current = tree.search(currentNodeKey.text.toInt()) ?: return
             initLabels(current.left ?: run {
-                return //TODO добавить алерт
+                throwAlert("Нет выборанного узла")
+                return
             })
         } catch (e: Exception) {
-            return //TODO добавить алерт
+            throwAlert("Сначала обновите узлы (кнопка обновить)")
+            return
         }
     }
 
@@ -57,10 +63,12 @@ class MainController {
         try {
             val current = tree.search(currentNodeKey.text.toInt()) ?: return
             initLabels(current.right ?: run {
-                return //TODO добавить алерт
+                throwAlert("Нет выборанного узла")
+                return
             })
         } catch (e: Exception) {
-            return //TODO добавить алерт
+            throwAlert("Сначала обновите узлы (кнопка обновить)")
+            return
         }
     }
 
@@ -68,11 +76,18 @@ class MainController {
         try {
             val current = tree.search(currentNodeKey.text.toInt()) ?: return
             initLabels(current.parent ?: run {
-                return //TODO добавить алерт
+                throwAlert("Нет выборанного узла")
+                return
             })
         } catch (e: Exception) {
-            return //TODO добавить алерт
+            throwAlert("Сначала обновите узлы (кнопка обновить)")
+            return
         }
+    }
+
+    private fun throwAlert(text: String, type: Alert.AlertType = Alert.AlertType.WARNING) {
+        val alert = Alert(type, text)
+        alert.showAndWait()
     }
 
     private fun initLabels(node: Node) {
