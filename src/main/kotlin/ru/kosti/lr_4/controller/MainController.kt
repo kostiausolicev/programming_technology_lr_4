@@ -25,7 +25,7 @@ class MainController {
         initLabels(tree.root ?: run {
             throwAlert("Нет корня у дерева", Alert.AlertType.ERROR)
             return
-        } )
+        })
     }
 
     fun search() {
@@ -39,11 +39,29 @@ class MainController {
     }
 
     fun delete() {
-
+        val key = keyInputField.text.toIntOrNull() ?: run {
+            throwAlert("Вы ввели некорректное число", Alert.AlertType.ERROR)
+            return
+        }
+        try {
+            tree.delete(key)
+        } catch (e: Exception) {
+            throwAlert(e.message?: "Ошибка удаления", Alert.AlertType.ERROR)
+            return
+        }
+        throwAlert("Удаление завершено, необходимо обновить", Alert.AlertType.INFORMATION)
     }
 
     fun add() {
-
+        val key = keyInputField.text.toIntOrNull() ?: run {
+            return throwAlert("Вы ввели некорректное число", Alert.AlertType.ERROR)
+        }
+        tree.add(key)
+        val node = tree.search(key) ?: run {
+            throwAlert("Узел не найден", Alert.AlertType.INFORMATION)
+            return
+        }
+        initLabels(node)
     }
 
     fun toLeft() {

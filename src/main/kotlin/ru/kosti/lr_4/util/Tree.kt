@@ -1,7 +1,7 @@
 package ru.kosti.lr_4.util
 
 class Tree(
-    var root: Node? = null
+    var root: Node? = null,
 ) {
     fun check(node: Node? = this.root): Boolean {
         return true
@@ -21,8 +21,7 @@ class Tree(
                 if (!check())
                     throw Exception("Дерево не правильное")
                 return
-            }
-            else if (key < current.key) {
+            } else if (key < current.key) {
                 if (current.left == null) {
                     val node = Node(key = key, parent = current)
                     current.left = node
@@ -32,8 +31,7 @@ class Tree(
                 }
                 current = current.left!!
                 continue
-            }
-            else {
+            } else {
                 if (current.right == null) {
                     val node = Node(key = key, parent = current)
                     current.right = node
@@ -55,8 +53,7 @@ class Tree(
                 if (current.left == null) return null
                 current = current.left!!
                 continue
-            }
-            else {
+            } else {
                 if (current.right == null) return null
                 current = current.right!!
                 continue
@@ -65,12 +62,36 @@ class Tree(
         return current
     }
 
-    fun searchNext(rootSubTree: Node): Node {
-        var current: Node = rootSubTree
-        while (current.left != null) {
-            current = current.left!!
+    fun maximum(rootSubTree: Node? = this.root): Node? =
+        if (rootSubTree == null) null
+        else if (rootSubTree.right != null) {
+            var current = rootSubTree.right!!
+            while (current.right != null) {
+                current = current.right!!
+            }
+            current
+        } else rootSubTree
+
+    fun minimum(rootSubTree: Node? = this.root): Node? =
+        if (rootSubTree == null) null
+        else if (rootSubTree.left != null) {
+            var current = rootSubTree.left!!
+            while (current.left != null) {
+                current = current.left!!
+            }
+            current
+        } else rootSubTree
+
+    fun searchNext(rootSubTree: Node): Node? { // TODO передать переопределение ссылок
+        if (rootSubTree.right != null)
+            return minimum(rootSubTree.right)
+        var currentX = rootSubTree
+        var currentY = rootSubTree.parent
+        while (currentY!= null && currentX.key == currentY.right!!.key) {
+            currentX = currentY
+            currentY = currentY.parent
         }
-        return current
+        return currentY
     }
 
     fun delete(key: Int) {
@@ -79,8 +100,7 @@ class Tree(
         if (node.left == null && node.right == null) {
             if (node.key < node.parent!!.key) {
                 node.parent!!.left = null
-            }
-            else {
+            } else {
                 node.parent!!.right = null
             }
             if (!check())
@@ -91,8 +111,7 @@ class Tree(
             val rightNode = node.right!!
             if (rightNode.key < node.parent!!.key) {
                 node.parent!!.left = rightNode
-            }
-            else if (rightNode.key > node.parent!!.key) {
+            } else if (rightNode.key > node.parent!!.key) {
                 node.parent!!.right = rightNode
             }
         }
@@ -101,19 +120,28 @@ class Tree(
             val leftNode = node.left!!
             if (leftNode.key < node.parent!!.key) {
                 node.parent!!.left = leftNode
-            }
-            else if (leftNode.key > node.parent!!.key) {
+            } else if (leftNode.key > node.parent!!.key) {
                 node.parent!!.right = leftNode
             }
         }
         // Удаление с левым потомком и правым потомком
-        else {
+        else { // TODO посмотреть логику
             val next = searchNext(node)
-            if (next.parent == null) return
-            next.parent!!.left = null
+                ?: throw Exception()
+            if (node.parent == null) root = next
+            if (next.parent!!.key < next.key) {
+                next.parent!!.left = null
+            } else {
+                next.parent!!.right = null
+            }
             next.parent = node.parent
             next.left = node.left
             next.right = node.right
+            next.left!!.parent = next
+            next.right!!.parent = next
+            node.left = null
+            node.right = null
+            node.parent = null
             if (!check())
                 throw Exception("Дерево не правильное")
         }
