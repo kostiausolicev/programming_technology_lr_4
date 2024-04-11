@@ -5,4 +5,8 @@ data class Node(
     var parent: Node? = null,
     var left: Node? = null,
     var right: Node? = null
-)
+) {
+    override fun toString(): String {
+        return key.toString()
+    }
+}
