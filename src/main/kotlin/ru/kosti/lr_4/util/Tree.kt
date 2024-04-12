@@ -3,13 +3,6 @@ package ru.kosti.lr_4.util
 class Tree(
     var root: Node? = null,
 ) {
-    fun check(node: Node? = this.root): Boolean {
-        return true
-//        if (node == null) return true
-//        if (node.left!!.key >= node.key || node.key >= node.right!!.key) return false
-//        return check(node.left) && check(node.right)
-    }
-
     fun add(key: Int) {
         if (root == null) {
             root = Node(key = key)
@@ -18,15 +11,11 @@ class Tree(
         var current = root!!
         while (true) {
             if (key == current.key) {
-                if (!check())
-                    throw Exception("Дерево не правильное")
                 return
             } else if (key < current.key) {
                 if (current.left == null) {
                     val node = Node(key = key, parent = current)
                     current.left = node
-                    if (!check())
-                        throw Exception("Дерево не правильное")
                     return
                 }
                 current = current.left!!
@@ -35,8 +24,6 @@ class Tree(
                 if (current.right == null) {
                     val node = Node(key = key, parent = current)
                     current.right = node
-                    if (!check())
-                        throw Exception("Дерево не правильное")
                     return
                 }
                 current = current.right!!
@@ -103,8 +90,6 @@ class Tree(
             } else {
                 node.parent!!.right = null
             }
-            if (!check())
-                throw Exception("Дерево не правильное")
         }
         // Удаление с правым потомком
         else if (node.left == null) {
@@ -154,8 +139,6 @@ class Tree(
             node.left = null
             node.right = null
             node.parent = null
-            if (!check())
-                throw Exception("Дерево не правильное")
         }
     }
 }
