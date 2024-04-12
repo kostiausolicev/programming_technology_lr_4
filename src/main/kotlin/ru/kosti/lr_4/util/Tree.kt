@@ -82,16 +82,16 @@ class Tree(
             current
         } else rootSubTree
 
-    fun searchNext(rootSubTree: Node): Node? { // TODO передать переопределение ссылок
+    fun searchNext(rootSubTree: Node): Node? {
         if (rootSubTree.right != null)
             return minimum(rootSubTree.right)
-        var currentX = rootSubTree
-        var currentY = rootSubTree.parent
-        while (currentY!= null && currentX.key == currentY.right!!.key) {
-            currentX = currentY
-            currentY = currentY.parent
+        var current = rootSubTree
+        var parent = rootSubTree.parent
+        while (parent != null && current.key == parent.right!!.key) {
+            current = parent
+            parent = parent.parent
         }
-        return currentY
+        return parent
     }
 
     fun delete(key: Int) {
@@ -125,20 +125,32 @@ class Tree(
             }
         }
         // Удаление с левым потомком и правым потомком
-        else { // TODO посмотреть логику
+        else {
             val next = searchNext(node)
                 ?: throw Exception()
             if (node.parent == null) root = next
             if (next.parent!!.key < next.key) {
-                next.parent!!.left = null
-            } else {
                 next.parent!!.right = null
+            } else {
+                next.parent!!.left = null
+            }
+            // Сохранение правого поддерева следующего элемента
+            if (next.right != null) {
+                next.right!!.parent = next.parent
+                next.parent!!.left = next.right
             }
             next.parent = node.parent
             next.left = node.left
             next.right = node.right
-            next.left!!.parent = next
-            next.right!!.parent = next
+            // Перенаправление ссылок удаляемого узла на новый узел
+            node.left!!.parent = next
+            node.right!!.parent = next
+            if (node.parent!!.key < node.key) {
+                node.parent!!.right = next
+            } else {
+                node.parent!!.left = next
+            }
+            // Удаление ссылок на удаляемый узел
             node.left = null
             node.right = null
             node.parent = null
