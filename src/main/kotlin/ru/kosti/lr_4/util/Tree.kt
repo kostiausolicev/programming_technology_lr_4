@@ -1,11 +1,66 @@
 package ru.kosti.lr_4.util
 
+import kotlin.math.abs
+
 class Tree(
     var root: Node? = null,
 ) {
+    fun balance() {
+        do {
+            val balance = checkBalance()
+            if (balance < 0) rotateLeft(root!!)
+            else if (balance > 0) rotateRight(root!!)
+        } while (balance != 0)
+    }
+
+    fun checkBalance(): Int {
+        val left = getHeight(root?.left ?: return 0)
+        val right = getHeight(root?.right ?: return 0)
+
+        val diff = right - left
+
+        return if (abs(diff) <= 1) 0
+        else if (diff > 1) -1
+        else 1
+    }
+
+    fun getHeight(node: Node?): Int {
+        if (node == null) return 0
+        return 1 + maxOf(getHeight(node.left), getHeight(node.right))
+    }
+
+    fun rotateLeft(pivot: Node) {
+        if (pivot.right == null) throw Exception()
+        val right = pivot.right!!
+        val pivotParent = pivot.parent
+
+        pivot.parent = right
+        pivot.right = right.left
+
+        right.parent = pivotParent
+        right.left = pivot
+
+        if (pivot.key == root?.key) root = right
+    }
+
+    fun rotateRight(pivot: Node) {
+        if (pivot.left == null) throw Exception()
+        val left = pivot.left!!
+        val pivotParent = pivot.parent
+
+        pivot.parent = left
+        pivot.left = left.right
+
+        left.parent = pivotParent
+        left.right = pivot
+
+        if (pivot.key == root?.key) root = left
+    }
+
     fun add(key: Int) {
         if (root == null) {
             root = Node(key = key)
+            balance()
             return
         }
         var current = root!!
@@ -16,6 +71,7 @@ class Tree(
                 if (current.left == null) {
                     val node = Node(key = key, parent = current)
                     current.left = node
+                    balance()
                     return
                 }
                 current = current.left!!
@@ -24,6 +80,7 @@ class Tree(
                 if (current.right == null) {
                     val node = Node(key = key, parent = current)
                     current.right = node
+                    balance()
                     return
                 }
                 current = current.right!!
@@ -113,7 +170,7 @@ class Tree(
         else {
             val next = searchNext(node)
                 ?: throw Exception()
-            if (node.parent == null) root = next
+            if (node.parent == null) this.root = next
             if (next.parent!!.key < next.key) {
                 next.parent!!.right = null
             } else {
@@ -140,5 +197,6 @@ class Tree(
             node.right = null
             node.parent = null
         }
+        balance()
     }
 }
