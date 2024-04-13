@@ -45,7 +45,11 @@ class MainController {
         }
         try {
             tree.delete(key)
-        } catch (e: Exception) {
+        } catch (e: NullPointerException) {
+            throwAlert("Удаление завершено, необходимо обновить", Alert.AlertType.INFORMATION)
+            return
+        }
+        catch (e: Exception) {
             throwAlert(e.message?: "Ошибка удаления", Alert.AlertType.ERROR)
             return
         }

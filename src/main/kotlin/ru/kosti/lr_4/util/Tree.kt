@@ -5,13 +5,6 @@ import kotlin.math.abs
 class Tree(
     var root: Node? = null,
 ) {
-    fun balance() {
-        do {
-            val balance = checkBalance()
-            if (balance < 0) rotateLeft(root!!)
-            else if (balance > 0) rotateRight(root!!)
-        } while (balance != 0)
-    }
 
     fun checkBalance(): Int {
         val left = getHeight(root?.left ?: return 0)
@@ -24,6 +17,14 @@ class Tree(
         else 1
     }
 
+    fun balance() {
+        do {
+            val balance = checkBalance()
+            if (balance < 0) rotateLeft(root!!)
+            else if (balance > 0) rotateRight(root!!)
+        } while (balance != 0)
+    }
+
     fun getHeight(node: Node?): Int {
         if (node == null) return 0
         return 1 + maxOf(getHeight(node.left), getHeight(node.right))
@@ -33,6 +34,7 @@ class Tree(
         if (pivot.right == null) throw Exception()
         val right = pivot.right!!
         val pivotParent = pivot.parent
+            ?.let { Node(pivot.parent!!.key, pivot.parent?.parent, pivot.parent?.left, pivot.parent?.right) }
 
         pivot.parent = right
         pivot.right = right.left
@@ -47,6 +49,7 @@ class Tree(
         if (pivot.left == null) throw Exception()
         val left = pivot.left!!
         val pivotParent = pivot.parent
+            ?.let { Node(pivot.parent!!.key, pivot.parent?.parent, pivot.parent?.left, pivot.parent?.right) }
 
         pivot.parent = left
         pivot.left = left.right
